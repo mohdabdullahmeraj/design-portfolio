@@ -58,6 +58,10 @@ export default function Contact() {
   const [msg, setMsg] = useState("");
   const [from, setFrom] = useState("");
   const [email, setEmail] = useState("");
+  // something@something.something, no spaces
+  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim());
+  const [emailTouched, setEmailTouched] = useState(false);
+  const emailBad = emailTouched && email.trim() && !emailOk;
   const [sent, setSent] = useState(null); // the visitor's message once sent
   const [reply, setReply] = useState(null); // "ok" | "fail" | "mailto"
 
@@ -181,10 +185,11 @@ export default function Contact() {
                   <textarea rows={3} placeholder="Write your message…" value={msg} onChange={(e) => setMsg(e.target.value)} aria-label="Your message" />
                   <div className="compose-fields">
                     <input type="text" placeholder="Your name" value={from} onChange={(e) => setFrom(e.target.value)} aria-label="Your name" autoComplete="name" />
-                    <input type="email" placeholder="Your email (so I can reply)" value={email} onChange={(e) => setEmail(e.target.value)} aria-label="Your email" autoComplete="email" required={!!site.formspree} />
+                    <input type="email" placeholder="Your email (so I can reply)" value={email} onChange={(e) => setEmail(e.target.value)} onFocus={() => setEmailTouched(false)} onBlur={() => setEmailTouched(true)} aria-label="Your email" autoComplete="email" required={!!site.formspree} aria-invalid={emailBad || undefined} />
+                    {emailBad && <span className="compose-error">That email doesn’t look right</span>}
                   </div>
                   <div className="compose-foot">
-                    <button type="submit" disabled={!msg.trim() || (!!site.formspree && !email.trim())}>Send <span aria-hidden="true">↗</span></button>
+                    <button type="submit" disabled={!msg.trim() || (!!site.formspree && !emailOk)}>Send <span aria-hidden="true">↗</span></button>
                   </div>
                 </form>
               </li>

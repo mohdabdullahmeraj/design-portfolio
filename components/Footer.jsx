@@ -1,7 +1,9 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { site, socials } from "@/content/site";
 import { NameMark } from "./NameMarks";
+import Inquiry from "./Inquiry";
 
 const circled = ["➀", "➁", "➂", "➃", "➄", "➅"];
 
@@ -81,7 +83,9 @@ function Snake({ onClose }) {
     // no page scrolling behind the game while it is open
     const prev = document.documentElement.style.overflow;
     document.documentElement.style.overflow = "hidden";
+    document.documentElement.dataset.popup = "";
     return () => {
+      delete document.documentElement.dataset.popup;
       clearInterval(id);
       window.removeEventListener("keydown", key);
       c.removeEventListener("pointerdown", down);
@@ -95,7 +99,7 @@ function Snake({ onClose }) {
       onPointerDown={(e) => { e.preventDefault(); steer(name); }}>{glyph}</button>
   );
   return (
-    <div className="egg" onClick={onClose}>
+    <div className="egg" onClick={onClose} data-tone="inverse">
       <div className="egg-box" onClick={(e) => e.stopPropagation()} role="dialog" aria-label="Snake game" data-tone="normal">
         <button type="button" className="egg-close" onClick={onClose} aria-label="Close game">✕</button>
         <strong>You found it 🐍</strong> · score {score}
@@ -169,6 +173,7 @@ function Run() {
 
 export default function Footer() {
   const [egg, setEgg] = useState(false);
+  const [inquiry, setInquiry] = useState(false);
   const box = useRef(null);
 
   // the footer slides up from behind the page as you scroll into it (-50% → 0)
@@ -224,7 +229,7 @@ export default function Footer() {
             ))}
           </div>
           <div className="factions">
-            <a className="fpill" href={`mailto:${site.email}?subject=${encodeURIComponent("Project inquiry")}`}>Send a project inquiry</a>
+            <button type="button" className="fpill" onClick={() => setInquiry(true)}>Send a project inquiry</button>
             <a className="ftop" href="#intro" onClick={(e) => { e.preventDefault(); scrollTo({ top: 0, behavior: "smooth" }); }}>
               <span className="fpill">Scroll back to top</span>
               <span className="ftop-arrow" aria-hidden="true"><span>↑</span><span>↑</span></span>
@@ -253,7 +258,10 @@ export default function Footer() {
           </p>
         </div>
       </div>
-      {egg && <Snake onClose={() => setEgg(false)} />}
+      {/* popups render at the top level of the page so they cover the header and side rail
+          (inside the footer they were stuck in its stacking layer) */}
+      {egg && createPortal(<Snake onClose={() => setEgg(false)} />, document.body)}
+      {inquiry && createPortal(<Inquiry onClose={() => setInquiry(false)} />, document.body)}
     </footer>
   );
 }
