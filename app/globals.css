@@ -709,7 +709,7 @@ html[data-cursor-visible] .cursor { opacity: 1; }
 /* long page in a scrollable frame */
 .cs-tall {
   max-height: min(80vh, 900px); min-height: min(60vh, 600px); overflow-y: auto; border-radius: 1rem;
-  border: 1px solid var(--line); background: var(--paper-shade); scrollbar-width: thin;
+  border: 1px solid var(--line); background: var(--paper-shade);
 }
 .cs-tall img { display: block; width: 100%; }
 
@@ -781,3 +781,20 @@ html[data-cursor-visible] .cursor { opacity: 1; }
 .nf-title { margin: 1.5rem 0 0; font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 500; letter-spacing: -0.02em; }
 .nf-sub { margin: 0; color: var(--ink-muted); max-width: 28rem; }
 .nf-links { display: flex; align-items: center; gap: 1.5rem; margin-top: 1.5rem; flex-wrap: wrap; justify-content: center; }
+
+/* ───────────── Custom scrollbar (page + scrollable frames) ─────────────
+   A slim ink pill floating on the paper, no grey track; darker while hovered or dragged.
+   Chrome/Edge/Safari use the ::-webkit-scrollbar rules (they allow the rounded pill);
+   Firefox, which has no such rules, gets the standard thin scrollbar in the same colours. */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--ink) 28%, transparent);
+  border-radius: 99px; border: 3px solid transparent; background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover { background-color: color-mix(in srgb, var(--ink) 55%, transparent); border-width: 2px; }
+::-webkit-scrollbar-thumb:active { background-color: var(--accent-red); }
+::-webkit-scrollbar-corner { background: transparent; }
+@supports not selector(::-webkit-scrollbar) {
+  html, .cs-tall { scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--ink) 35%, transparent) transparent; }
+}
