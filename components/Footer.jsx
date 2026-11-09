@@ -6,7 +6,8 @@ import { NameMark } from "./NameMarks";
 const circled = ["➀", "➁", "➂", "➃", "➄", "➅"];
 
 /* Hidden easter egg: a tiny snake game.
-   Keyboard: arrow keys (Esc closes). Phones: swipe on the board or tap the arrow buttons. */
+   Keyboard: arrow keys (Esc closes, Enter/Space plays again). Phones: swipe on the board or tap the arrow buttons.
+   Hitting yourself ends the round: the board shows your score + best score (saved in this browser) and a "Play again" button. */
 const DIRS = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
 function Snake({ onClose }) {
   const canvas = useRef(null);
@@ -15,6 +16,8 @@ function Snake({ onClose }) {
   close.current = onClose;
   const [score, setScore] = useState(0);
   const [touch, setTouch] = useState(false);
+  const [over, setOver] = useState(null); // { score, best, record } once the snake hits itself
+  const restart = useRef(() => {});
 
   // a new direction is accepted unless it reverses straight into the snake
   const steer = (name) => { turn.current = DIRS[name]; };
@@ -25,9 +28,16 @@ function Snake({ onClose }) {
     const css = getComputedStyle(document.documentElement);
     const ink = css.getPropertyValue("--ink").trim(), red = css.getPropertyValue("--accent-red").trim();
     const N = 16, S = 16;
-    let snake = [{ x: 8, y: 8 }], dir = { x: 1, y: 0 }, food = { x: 3, y: 4 }, pts = 0;
+    let snake, dir, food, pts, running;
+    const reset = () => {
+      snake = [{ x: 8, y: 8 }]; dir = { x: 1, y: 0 }; food = { x: 3, y: 4 }; pts = 0; running = true;
+      turn.current = null; setScore(0); setOver(null);
+    };
+    restart.current = reset;
+    reset();
     const key = (e) => {
       if (e.key === "Escape") return close.current();
+      if (!running && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); return reset(); }
       const name = { ArrowUp: "up", ArrowDown: "down", ArrowLeft: "left", ArrowRight: "right" }[e.key];
       if (name) { steer(name); e.preventDefault(); }
     };
@@ -42,11 +52,21 @@ function Snake({ onClose }) {
       steer(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? "right" : "left") : (dy > 0 ? "down" : "up"));
     };
     const tick = () => {
+      if (!running) return;
       const t = turn.current;
       if (t && !(t[0] === -dir.x && t[1] === -dir.y)) dir = { x: t[0], y: t[1] };
       turn.current = null;
       const head = { x: (snake[0].x + dir.x + N) % N, y: (snake[0].y + dir.y + N) % N };
-      if (snake.some((s) => s.x === head.x && s.y === head.y)) { snake = [{ x: 8, y: 8 }]; pts = 0; setScore(0); }
+      if (snake.some((s) => s.x === head.x && s.y === head.y)) {
+        // game over: freeze the board and show the score
+        running = false;
+        let best = 0;
+        try { best = +localStorage.getItem("am:snake-best") || 0; } catch {}
+        const record = pts > best;
+        if (record) { best = pts; try { localStorage.setItem("am:snake-best", String(pts)); } catch {} }
+        setOver({ score: pts, best, record });
+        return;
+      }
       snake.unshift(head);
       if (head.x === food.x && head.y === food.y) { pts++; setScore(pts); food = { x: Math.random() * N | 0, y: Math.random() * N | 0 }; }
       else snake.pop();
@@ -79,7 +99,17 @@ function Snake({ onClose }) {
       <div className="egg-box" onClick={(e) => e.stopPropagation()} role="dialog" aria-label="Snake game" data-tone="normal">
         <button type="button" className="egg-close" onClick={onClose} aria-label="Close game">✕</button>
         <strong>You found it 🐍</strong> · score {score}
-        <canvas ref={canvas} width={256} height={256} />
+        <div className="egg-board">
+          <canvas ref={canvas} width={256} height={256} />
+          {over && (
+            <div className="egg-over" role="status">
+              <b>Game over</b>
+              <span className="egg-over-score">{over.score}</span>
+              <small>{over.record && over.score > 0 ? "New best score! 🎉" : `Best: ${over.best}`}</small>
+              <button type="button" className="egg-again" onClick={() => restart.current()} autoFocus>Play again ↻</button>
+            </div>
+          )}
+        </div>
         {touch ? (
           <div className="egg-pad">
             {pad("up", "Up", "↑")}{pad("left", "Left", "←")}{pad("down", "Down", "↓")}{pad("right", "Right", "→")}

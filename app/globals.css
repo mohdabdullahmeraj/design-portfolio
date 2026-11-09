@@ -622,6 +622,18 @@ html:not([data-revealed]) .header-right { opacity: 0; }
 .egg-close { position: absolute; top: 0.5rem; right: 0.6rem; width: 28px; height: 28px; border-radius: 50%; font-size: 0.8rem; color: var(--ink-muted); }
 .egg-close:hover { color: var(--ink); background: var(--paper-shade); }
 .egg canvas { touch-action: none; } /* swipes steer the snake instead of scrolling */
+/* game over card laid over the frozen board */
+.egg-board { position: relative; width: 256px; margin: 0.75rem auto; }
+.egg-board canvas { margin: 0; }
+.egg-over {
+  position: absolute; inset: 0; border-radius: 0.4rem; display: grid; place-content: center; justify-items: center; gap: 0.35rem;
+  background: color-mix(in srgb, var(--paper) 82%, transparent); backdrop-filter: blur(2px); animation: fade-in 0.25s;
+}
+.egg-over b { font-size: 0.85rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
+.egg-over-score { font: 400 3.4rem/1 var(--font-display), Impact, sans-serif; }
+.egg-over small { font-size: 0.75rem; color: var(--ink-muted); }
+.egg-again { margin-top: 0.5rem; background: var(--ink); color: var(--paper); border-radius: 999px; padding: 0.55rem 1.1rem; font-size: 0.85rem; font-weight: 500; }
+.egg-again:active { scale: 0.96; }
 /* phones: a little arrow pad under the board */
 .egg-pad { display: grid; grid-template-columns: repeat(3, 52px); grid-template-areas: ". up ." "left down right"; gap: 6px; justify-content: center; margin: 0 0 0.75rem; }
 .egg-pad button { height: 46px; border-radius: 12px; background: var(--ink); color: var(--paper); font-size: 1.2rem; touch-action: manipulation; user-select: none; -webkit-user-select: none; }
