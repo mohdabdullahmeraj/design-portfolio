@@ -23,6 +23,7 @@ export const projects = [
       ["Services", "UX audit, UI design, Interactive prototype"],
       ["Scope", "Onboarding, Home, Chat, Spaces, Opportunities, Missions, Payouts, Search, Profile"],
       ["Tools", "Figma"],
+      ["Links", [{ label: "Prototype", href: "https://www.figma.com/proto/dzVNsyG5zWuZqYciQw6Qop/UNDER-25-APP-UI_mohdabdullahmeraj?node-id=1-22&p=f&t=K8ebIFML4MjyB1uv-1&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=1%3A22" }]],
     ],
     sections: [
       {
@@ -120,8 +121,7 @@ export const projects = [
       [
         "Links",
         [
-          { label: "Figma prototype", href: "https://www.figma.com/proto/rjXZLxGYQwQA6AHUsSsoRr/Mohd.-Abdullah-Meraj_DesignVerse?node-id=2187-5&starting-point-node-id=2187%3A5" },
-          { label: "Live on Wooble", href: "https://wooble.org/mohd-abdullahmeraj9676" },
+          { label: "Prototype", href: "https://www.figma.com/proto/rjXZLxGYQwQA6AHUsSsoRr/Mohd.-Abdullah-Meraj_DesignVerse?node-id=2187-5&p=f&t=4jEKUfvs83ehQRh4-1&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=2187%3A5" },
         ],
       ],
     ],
@@ -198,6 +198,7 @@ export const projects = [
       ["Project", "NSUT Designathon"],
       ["Services", "Brand strategy, Logo & monogram, Typography, Packaging, Website"],
       ["Tools", "Figma, Photoshop, CorelDRAW"],
+      ["Links", [{ label: "Behance", href: "https://www.behance.net/gallery/236049735/Plantry" }]],
     ],
     sections: [
       {
@@ -312,6 +313,7 @@ export const projects = [
       ["Client", "Brew & Chill café (brief)"],
       ["Services", "Logo, Typography, Website design"],
       ["Tools", "Figma"],
+      ["Links", [{ label: "Behance", href: "https://www.behance.net/gallery/236867353/Brew-Chill" }]],
     ],
     sections: [
       {
