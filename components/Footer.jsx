@@ -5,22 +5,46 @@ import { NameMark } from "./NameMarks";
 
 const circled = ["➀", "➁", "➂", "➃", "➄", "➅"];
 
-/* Hidden easter egg: a tiny snake game */
+/* Hidden easter egg: a tiny snake game.
+   Keyboard: arrow keys (Esc closes). Phones: swipe on the board or tap the arrow buttons. */
+const DIRS = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
 function Snake({ onClose }) {
   const canvas = useRef(null);
+  const turn = useRef(null); // set from keys, swipes or buttons; read on the next tick
+  const close = useRef(onClose);
+  close.current = onClose;
   const [score, setScore] = useState(0);
+  const [touch, setTouch] = useState(false);
+
+  // a new direction is accepted unless it reverses straight into the snake
+  const steer = (name) => { turn.current = DIRS[name]; };
+
   useEffect(() => {
+    setTouch(matchMedia("(pointer: coarse)").matches);
     const c = canvas.current, g = c.getContext("2d");
     const css = getComputedStyle(document.documentElement);
     const ink = css.getPropertyValue("--ink").trim(), red = css.getPropertyValue("--accent-red").trim();
     const N = 16, S = 16;
     let snake = [{ x: 8, y: 8 }], dir = { x: 1, y: 0 }, food = { x: 3, y: 4 }, pts = 0;
     const key = (e) => {
-      const m = { ArrowUp: [0, -1], ArrowDown: [0, 1], ArrowLeft: [-1, 0], ArrowRight: [1, 0] }[e.key];
-      if (e.key === "Escape") onClose();
-      if (m && !(m[0] === -dir.x && m[1] === -dir.y)) { dir = { x: m[0], y: m[1] }; e.preventDefault(); }
+      if (e.key === "Escape") return close.current();
+      const name = { ArrowUp: "up", ArrowDown: "down", ArrowLeft: "left", ArrowRight: "right" }[e.key];
+      if (name) { steer(name); e.preventDefault(); }
+    };
+    // swipe on the board
+    let start = null;
+    const down = (e) => { start = { x: e.clientX, y: e.clientY }; c.setPointerCapture?.(e.pointerId); };
+    const up = (e) => {
+      if (!start) return;
+      const dx = e.clientX - start.x, dy = e.clientY - start.y;
+      start = null;
+      if (Math.max(Math.abs(dx), Math.abs(dy)) < 14) return;
+      steer(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? "right" : "left") : (dy > 0 ? "down" : "up"));
     };
     const tick = () => {
+      const t = turn.current;
+      if (t && !(t[0] === -dir.x && t[1] === -dir.y)) dir = { x: t[0], y: t[1] };
+      turn.current = null;
       const head = { x: (snake[0].x + dir.x + N) % N, y: (snake[0].y + dir.y + N) % N };
       if (snake.some((s) => s.x === head.x && s.y === head.y)) { snake = [{ x: 8, y: 8 }]; pts = 0; setScore(0); }
       snake.unshift(head);
@@ -30,16 +54,38 @@ function Snake({ onClose }) {
       g.fillStyle = red; g.fillRect(food.x * S + 3, food.y * S + 3, S - 6, S - 6);
       g.fillStyle = ink; snake.forEach((s) => g.fillRect(s.x * S + 1, s.y * S + 1, S - 2, S - 2));
     };
-    const id = setInterval(tick, 110);
+    const id = setInterval(tick, 120);
     window.addEventListener("keydown", key);
-    return () => { clearInterval(id); window.removeEventListener("keydown", key); };
-  }, [onClose]);
+    c.addEventListener("pointerdown", down);
+    c.addEventListener("pointerup", up);
+    // no page scrolling behind the game while it is open
+    const prev = document.documentElement.style.overflow;
+    document.documentElement.style.overflow = "hidden";
+    return () => {
+      clearInterval(id);
+      window.removeEventListener("keydown", key);
+      c.removeEventListener("pointerdown", down);
+      c.removeEventListener("pointerup", up);
+      document.documentElement.style.overflow = prev;
+    };
+  }, []);
+
+  const pad = (name, label, glyph) => (
+    <button type="button" className={`egg-pad-${name}`} aria-label={label}
+      onPointerDown={(e) => { e.preventDefault(); steer(name); }}>{glyph}</button>
+  );
   return (
     <div className="egg" onClick={onClose}>
-      <div className="egg-box" onClick={(e) => e.stopPropagation()}>
+      <div className="egg-box" onClick={(e) => e.stopPropagation()} role="dialog" aria-label="Snake game">
+        <button type="button" className="egg-close" onClick={onClose} aria-label="Close game">✕</button>
         <strong>You found it 🐍</strong> · score {score}
         <canvas ref={canvas} width={256} height={256} />
-        Arrow keys to play · Esc to close
+        {touch ? (
+          <div className="egg-pad">
+            {pad("up", "Up", "↑")}{pad("left", "Left", "←")}{pad("down", "Down", "↓")}{pad("right", "Right", "→")}
+          </div>
+        ) : null}
+        {touch ? "Swipe on the board or use the arrows" : "Arrow keys to play · Esc to close"}
       </div>
     </div>
   );

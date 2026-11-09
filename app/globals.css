@@ -615,7 +615,18 @@ html:not([data-revealed]) .header-right { opacity: 0; }
 
 /* Easter egg: snake */
 .egg { position: fixed; inset: 0; z-index: 400; display: grid; place-items: center; background: #14141299; backdrop-filter: blur(4px); animation: fade-in 0.3s; }
-.egg-box { background: var(--paper); padding: 1.25rem; border-radius: 0.75rem; text-align: center; font-size: 0.8rem; }
+.egg-box { position: relative; background: var(--paper); color: var(--ink); padding: 1.25rem; border-radius: 0.75rem; text-align: center; font-size: 0.8rem; }
+/* the tiny "Play snake" text link gets a bigger invisible tap area (it was ~60×15px, easy to miss on phones) */
+.fcopy p button { position: relative; }
+.fcopy p button::after { content: ""; position: absolute; inset: -14px -10px; }
+.egg-close { position: absolute; top: 0.5rem; right: 0.6rem; width: 28px; height: 28px; border-radius: 50%; font-size: 0.8rem; color: var(--ink-muted); }
+.egg-close:hover { color: var(--ink); background: var(--paper-shade); }
+.egg canvas { touch-action: none; } /* swipes steer the snake instead of scrolling */
+/* phones: a little arrow pad under the board */
+.egg-pad { display: grid; grid-template-columns: repeat(3, 52px); grid-template-areas: ". up ." "left down right"; gap: 6px; justify-content: center; margin: 0 0 0.75rem; }
+.egg-pad button { height: 46px; border-radius: 12px; background: var(--ink); color: var(--paper); font-size: 1.2rem; touch-action: manipulation; user-select: none; -webkit-user-select: none; }
+.egg-pad button:active { scale: 0.94; }
+.egg-pad-up { grid-area: up; } .egg-pad-left { grid-area: left; } .egg-pad-down { grid-area: down; } .egg-pad-right { grid-area: right; }
 .egg canvas { display: block; margin: 0.75rem auto; background: var(--note); border-radius: 0.4rem; }
 
 /* ───────────── Crosshair cursor ───────────── */
