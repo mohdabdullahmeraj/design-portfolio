@@ -115,7 +115,7 @@ export default function Contact() {
   return (
     <section id="contact" className="section" aria-labelledby="contact-title">
       <div className="col">
-        <h2 id="contact-title" className="section-title">Let’s have chai?</h2>
+        <h2 id="contact-title" className="section-title">Talk to me</h2>
 
         <div className="chat-card" ref={card}>
           <span className="crop tl" /><span className="crop tr" /><span className="crop bl" /><span className="crop br" />

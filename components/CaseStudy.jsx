@@ -12,7 +12,7 @@ function Figure({ f }) {
   if (f.kind === "screens") {
     return (
       <figure className="cs-figure">
-        <div className="cs-screens" style={{ "--n": f.items.length }}>
+        <div className="cs-screens" data-n={f.items.length} style={{ "--n": f.items.length }}>
           {f.items.map((s) => (
             <div key={s.src} className={`cs-screen ${/before/i.test(s.label) ? "is-before" : ""}`}>
               <img src={s.src} alt={s.label} loading="lazy" />

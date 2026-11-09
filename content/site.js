@@ -10,7 +10,7 @@ export const site = {
   role: "Product & visual designer",
   email: "mohdabdullahmeraj1705@gmail.com",
   // Formspree form ID (the part after formspree.io/f/). Empty = the contact form opens the visitor's email app instead.
-  formspree: "",
+  formspree: "xwlldgrp",
   phone: { display: "+91 70659 03592", href: "tel:+917065903592" },
   timezone: { label: "IST", iana: "Asia/Kolkata" },
   status: "Open to internships and freelance work",

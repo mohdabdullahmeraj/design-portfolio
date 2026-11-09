@@ -13,6 +13,8 @@ const GAP = 12;
 const HEIGHTS = [320, 270, 350, 290]; // regular row heights (px), cycled — a bit smaller than featured
 const LEAD = 0; // featured rows forced to the very top (0 = top is a mix of regular and featured rows)
 const BIG_H = 540; // featured rows (items marked big: true) stay clearly the biggest
+const MOBILE_H = [240, 210, 255, 225]; // phones (< 640px wide): regular rows
+const MOBILE_BIG_H = 380; // phones: featured rows
 const LEANS = ["-1.2deg", "0.9deg", "-0.6deg", "1.4deg", "-1deg", "0.6deg"];
 
 // Packs items into rows that each fill the width exactly (justified rows).
@@ -20,7 +22,7 @@ const LEANS = ["-1.2deg", "0.9deg", "-0.6deg", "1.4deg", "-1deg", "0.6deg"];
 function rowsFor(width, items) {
   const mobile = width < 640;
   const normal = [], big = [];
-  items.forEach((it, i) => (it.big && !mobile ? big : normal).push(i));
+  items.forEach((it, i) => (it.big ? big : normal).push(i)); // favourites get their own bigger rows on phones too
   const rows = [];
   const fill = (queue, target, tall) => {
     const idx = [];
@@ -73,8 +75,9 @@ function rowsFor(width, items) {
     out.forEach((r, k) => { if (r.last) r.h = Math.min(r.h, targetAt(k) * 1.3); });
     return out;
   };
-  const normalRows = build(normal, (k) => (mobile ? 170 : HEIGHTS[k % HEIGHTS.length]), false);
-  const bigRows = build(big, () => BIG_H, true);
+  // phones: about two pieces per regular row, and a favourite usually fills a row on its own (user wanted bigger pieces)
+  const normalRows = build(normal, (k) => (mobile ? MOBILE_H[k % MOBILE_H.length] : HEIGHTS[k % HEIGHTS.length]), false);
+  const bigRows = build(big, () => (mobile ? MOBILE_BIG_H : BIG_H), true);
   // …open the grid with the featured pieces (the user's best work), then spread the rest evenly
   rows.push(...bigRows.splice(0, mobile ? 0 : LEAD).map((r) => ({ ...r, big: true })));
   const N = normalRows.length, B = bigRows.length;

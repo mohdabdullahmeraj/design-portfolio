@@ -307,7 +307,7 @@ html:not([data-revealed]) .header-right { opacity: 0; }
 .projects-link:hover .projects-thumb img { scale: 1.03; }
 /* "View more work" end card: plain paper with a dashed border */
 .projects-more {
-  display: grid; align-content: center; justify-items: center; gap: 1rem; text-align: center;
+  display: grid; align-content: center; justify-items: center; gap: 0.45rem; text-align: center;
   background: transparent; border: 1.5px dashed color-mix(in srgb, var(--ink) 30%, transparent);
   transition: background 0.4s, border-color 0.4s;
 }
@@ -316,6 +316,13 @@ html:not([data-revealed]) .header-right { opacity: 0; }
 .projects-more-title { display: inline-flex; align-items: center; gap: 0.6rem; font-size: clamp(1.8rem, 4vw, 3.4rem); font-weight: 500; letter-spacing: -0.03em; }
 .projects-link:hover .projects-more-title .arrow span:first-child { translate: 120%; }
 .projects-link:hover .projects-more-title .arrow span:last-child { translate: 0; }
+/* phones: smaller title, arrow in a dark circle underneath, narrower caption, so the card breathes */
+@media (max-width: 767px) {
+  .projects-more { gap: 0.25rem; padding: 1.25rem; }
+  .projects-more-kicker { font-size: 0.75rem; max-width: 15rem; line-height: 1.4; }
+  .projects-more-title { flex-direction: column; gap: 0.6rem; font-size: 1.45rem; line-height: 1.15; }
+  .projects-more-title .arrow { width: 2.4rem; height: 2.4rem; border-radius: 50%; background: var(--ink); color: var(--paper); font-size: 1rem; display: inline-grid; place-items: center; overflow: hidden; }
+}
 .projects-meta { padding-top: 0.85rem; font-size: 1.05rem; }
 .projects-meta h3 { margin: 0; font-size: 1.05rem; font-weight: 500; }
 .projects-meta p { margin: 0; color: var(--ink-muted); }
@@ -433,8 +440,8 @@ html:not([data-revealed]) .header-right { opacity: 0; }
 .thread { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; align-content: start; }
 /* every message shares one left edge: a fixed gutter holds the eyes (only on the latest message) */
 .chat-row { display: flex; align-items: flex-end; gap: 0.6rem; min-width: 0; }
-.chat-row > .bubble { min-width: 0; overflow-wrap: anywhere; }
-.chat-card a[href^="tel"] { white-space: nowrap; } /* keep the phone number on one line */ /* bubbles shrink to the card on small screens instead of running off it */
+.chat-row > .bubble { min-width: 0; overflow-wrap: anywhere; } /* bubbles shrink to the card on small screens instead of running off it */
+.chat-card a[href^="tel"] { white-space: nowrap; } /* keep the phone number on one line */
 .chat-gutter { flex: none; width: 34px; display: flex; justify-content: center; }
 .chat-row .icon-btn { align-self: center; }
 .bubble {
@@ -477,10 +484,30 @@ html:not([data-revealed]) .header-right { opacity: 0; }
 .compose button { flex: none; background: var(--ink); color: var(--paper); border-radius: 999px; padding: 0.45rem 0.95rem; font-size: 0.85rem; display: inline-flex; gap: 0.35rem; align-items: center; transition: opacity 0.2s, scale 0.15s; }
 .compose button:active { scale: 0.96; }
 .compose button:disabled { opacity: 0.35; cursor: default; }
+/* phones: a tighter, smaller chat, closer to a real messaging app */
 @media (max-width: 560px) {
-  .chat-card { padding: 1rem 0.9rem 1.4rem; }
-  .chat-gutter { width: 28px; } .chat-gutter .avatar { width: 28px; height: 28px; }
-  .invite { flex-wrap: wrap; } .invite .pill { margin-left: 0; }
+  .chat-card { padding: 0.85rem 0.75rem 1.1rem; min-height: 0; border-radius: 1rem; }
+  .chat-head { gap: 0.55rem; padding-bottom: 0.7rem; margin-bottom: 0.85rem; }
+  .chat-head .avatar { width: 30px; height: 30px; } .chat-head .avatar svg { width: 22px; }
+  .chat-head b { font-size: 0.88rem; } .chat-head small { font-size: 0.7rem; }
+  .thread { gap: 0.4rem; }
+  .chat-row { gap: 0.45rem; }
+  .chat-gutter { width: 24px; } .chat-gutter .avatar { width: 24px; height: 24px; } .chat-gutter .avatar svg { width: 18px; }
+  .bubble { font-size: 0.85rem; line-height: 1.4; padding: 0.5rem 0.75rem; border-radius: 0.95rem 0.95rem 0.95rem 0.3rem; }
+  /* the email / phone go on their own line instead of breaking mid-address */
+  .chat-row .bubble > a.link-underline { display: table; margin-top: 0.1rem; font-size: 0.8rem; white-space: nowrap; }
+  .icon-btn { width: 26px; height: 26px; font-size: 0.72rem; }
+  .invite { display: grid; grid-template-columns: auto 1fr; gap: 0.6rem; padding: 0.6rem; margin-top: 0.5rem; }
+  .invite .pill { grid-column: 1 / -1; justify-self: start; margin-left: 0; font-size: 0.78rem; padding: 0.4rem 0.8rem; }
+  .cal { width: 32px; } .cal span { font-size: 0.85rem; }
+  .invite small { font-size: 0.7rem; }
+  .typing { padding: 0.6rem 0.8rem; }
+  .chat-row.mine .bubble { border-radius: 0.95rem 0.95rem 0.3rem 0.95rem; }
+  .compose { width: 100%; padding: 0.6rem 0.75rem; border-radius: 0.95rem 0.95rem 0.3rem 0.95rem; }
+  .compose textarea { font-size: 0.85rem; }
+  .compose input { font-size: 0.78rem; }
+  .compose button { font-size: 0.8rem; padding: 0.4rem 0.85rem; }
+  .chat-spark.s1 { width: 20px; right: 1.5rem; }
 }
 
 .contact-list { margin: 2.5rem 0 0; }
@@ -665,10 +692,19 @@ html[data-cursor-visible] .cursor { opacity: 1; }
   padding: clamp(1.5rem, 4vw, 3rem) 1rem; border-radius: 1rem; background: var(--note);
 }
 .cs-screen { display: grid; justify-items: center; gap: 0.6rem; width: min(30%, 15rem); }
-.cs-screens[style*="--n: 1"] .cs-screen { width: min(48%, 15rem); }
+.cs-screens[data-n="1"] .cs-screen { width: min(48%, 15rem); }
 .cs-screen img { width: 100%; border-radius: 1.4rem; box-shadow: 0 1px 2px #14141214, 0 18px 40px -18px #14141266; }
 .cs-screen span { font-size: 0.75rem; color: var(--ink-muted); text-transform: uppercase; letter-spacing: 0.08em; }
 .cs-screen.is-before img { filter: grayscale(0.6); opacity: 0.85; scale: 0.92; transform-origin: bottom; }
+/* phones: no panel, just the screens as big as possible. A group of screens stays side by side so they can be
+   compared at a glance (2 → about half the width each, 3 → about a third); a single screen sits centred at ~86%. */
+@media (max-width: 560px) {
+  .cs-screens { background: none; border-radius: 0; padding: 0; justify-content: center; align-items: flex-end; gap: 0.5rem; }
+  .cs-screen { flex: 1 1 0; min-width: 0; width: auto; gap: 0.4rem; }
+  .cs-screens[data-n="1"] .cs-screen { flex: 0 0 86%; }
+  .cs-screen img { border-radius: clamp(0.7rem, 4vw, 1.6rem); box-shadow: 0 1px 2px #14141214, 0 10px 22px -14px #14141255; }
+  .cs-screen span { font-size: 0.65rem; }
+}
 
 /* long page in a scrollable frame */
 .cs-tall {
