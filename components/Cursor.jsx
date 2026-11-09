@@ -35,6 +35,9 @@ export default function Cursor() {
       const t = e.target.closest?.("a, button, [role='button'], label, summary, input, textarea, [data-cursor]");
       const text = t?.getAttribute("data-cursor") ?? "";
       root.current.dataset.state = text ? "label" : t ? "link" : "";
+      // over a [data-tone="inverse"] area (the footer band) the cursor switches to the paper colour so it stays visible
+      const inv = e.target.closest?.("[data-tone]")?.getAttribute("data-tone") === "inverse";
+      if (inv) root.current.dataset.inverse = ""; else delete root.current.dataset.inverse;
       label.current.textContent = text;
     };
     const down = () => (root.current.dataset.pressed = "");

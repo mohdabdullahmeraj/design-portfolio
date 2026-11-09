@@ -650,6 +650,10 @@ html[data-cursor-visible] .cursor { opacity: 1; }
 }
 .cursor[data-state="label"] .cursor-label { opacity: 1; scale: 1; }
 .cursor[data-state="label"] .cursor-plus { transform: scale(0.6); }
+/* over the footer band (ink background) the cursor flips to paper colours so it doesn't vanish */
+.cursor[data-inverse] .cursor-line, .cursor[data-inverse] .cursor-plus::before, .cursor[data-inverse] .cursor-plus::after { background: var(--paper); }
+.cursor[data-inverse] .cursor-line { opacity: 0.14; }
+.cursor[data-inverse] .cursor-label { background: var(--paper); color: var(--ink); }
 
 /* ───────────── Crayon doodles ───────────── */
 .crayon { filter: url(#crayon); }

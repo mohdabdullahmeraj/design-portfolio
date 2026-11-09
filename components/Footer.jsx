@@ -76,7 +76,7 @@ function Snake({ onClose }) {
   );
   return (
     <div className="egg" onClick={onClose}>
-      <div className="egg-box" onClick={(e) => e.stopPropagation()} role="dialog" aria-label="Snake game">
+      <div className="egg-box" onClick={(e) => e.stopPropagation()} role="dialog" aria-label="Snake game" data-tone="normal">
         <button type="button" className="egg-close" onClick={onClose} aria-label="Close game">✕</button>
         <strong>You found it 🐍</strong> · score {score}
         <canvas ref={canvas} width={256} height={256} />
@@ -175,7 +175,7 @@ export default function Footer() {
   const ext = (h) => (h.startsWith("http") ? { target: "_blank", rel: "noreferrer" } : {});
 
   return (
-    <footer className="footer" aria-label="Footer">
+    <footer className="footer" aria-label="Footer" data-tone="inverse">
       <div className="footer-box" ref={box}>
         <a href={`mailto:${site.email}`} className="fcta" data-cursor="Say hi" aria-label={`Send an email to ${site.email}`}>
           <span className="fcta-track" aria-hidden="true"><Run /><Run /></span>
