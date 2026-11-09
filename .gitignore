@@ -1,0 +1,19 @@
+# dependencies & builds
+node_modules
+.next
+out
+
+# raw source files from Abdullah (zips, Figma exports, originals) — large, kept local only
+incoming
+
+# local-only notes and tool settings
+CLAUDE.local.md
+BLUEPRINT.md
+.claude
+
+# env & OS junk
+.env*
+.vercel
+.DS_Store
+Thumbs.db
+*.log

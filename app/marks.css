@@ -1,0 +1,29 @@
+/* ───────── Name mark animation ───────── */
+:root { --spark-yellow: #f2b705; }
+html[data-theme="dark"] { --spark-yellow: #ffd23f; }
+.nm { display: block; max-width: 100%; overflow: visible; }
+.nm-flood-paper { flood-color: var(--paper); flood-opacity: 0.32; }
+.nm-sparkles { transition: opacity 0.4s; }
+.nm .nm-l, .nm .nm-spark, .nm .nm-dot { transform-box: fill-box; }
+
+/* letters are stamped in one after another: slightly big and soft-focus,
+   pressing down to sharp — smooth ease-out, no bounce */
+.nm .nm-l { transform-origin: 50% 55%; }
+.nm.go .nm-l { animation: nm-stamp 0.7s cubic-bezier(0.16, 1, 0.3, 1) calc(var(--d) * 110ms) both; }
+@keyframes nm-stamp {
+  0% { opacity: 0; transform: scale(1.35); filter: blur(8px); }
+  60% { opacity: 1; filter: blur(0); }
+  100% { opacity: 1; transform: none; filter: blur(0); }
+}
+
+/* stars simply fade in where they are (no movement), then stay still */
+.nm.go .nm-spark, .nm.go .nm-dot {
+  animation: nm-fade 0.9s ease calc(800ms + var(--d) * 45ms) both;
+}
+@keyframes nm-fade { from { opacity: 0; } to { opacity: 1; } }
+/* stars sitting on a letter fade in together with that letter (keeps its edge covered) */
+.nm.go .nm-spark-on { animation: nm-fade 0.5s ease calc(var(--d) * 110ms) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .nm.go .nm-l, .nm.go .nm-spark, .nm.go .nm-dot, .nm.go .nm-spark-on { animation: none; }
+}
